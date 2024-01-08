@@ -15,3 +15,11 @@
 - SDL2
 - glfw
 
+### XML
+
+Xml for a file format would be ideal. sqlite could be an option, but might be over kill for this kind of app.
+Using sqlite for local settings might be ideal.
+
+### Sqlite
+
+Local settings

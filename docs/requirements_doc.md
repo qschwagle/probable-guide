@@ -61,3 +61,16 @@ Internationalization support should be easily available.
 #### Support devices / screen readers
 
 Screen readers and support devices should be supported on at least mac os and windows. Linux in the future.
+
+#### Portable
+
+It would be ideal to be able to take snapshots of the diagrams, or even link together smaller diagrams 
+for powerpoints and text documents. Therefore, having the ability to create images of entire diagrams or
+portions of them would be ideal.
+
+#### Sub diagrams / diagram trees
+
+For complex diagrams, sub diagrams might be useful. Having multiple diagrams connected as sub components could be nice
+
+
+
