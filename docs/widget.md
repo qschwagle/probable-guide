@@ -34,7 +34,7 @@ interface Clickable {
 ### Double Clickable
 
 interface DoubleClickable {
-    bool hit(pt)
+    bool hit(point)
 }
 
 ### Renderable
@@ -49,6 +49,34 @@ interface Measurable {
     Rect Size()
 }
 
+### Position
+
+interface Position {
+    Point GetPosition() // TopLeft
+}
+
+### Disable
+
+interface Disable {
+    bool isDisabled()
+    void setDisabled(bool)
+}
+
+### Draggable 
+
+interface Draggable {
+    bool draggable()
+    void disableDrag()
+    List<targettype> targets
+}
+
+### Dropzone
+
+interface Dropzone {
+    bool isDropzone()
+    type dropzone()
+}
+
 ## Should widgets be encodable / decodable?
 
 We can easily build and store out the trees of a UI using widgets.
@@ -58,6 +86,11 @@ We can easily build and store out the trees of a UI using widgets.
 - width
 - height
 - top left position
+
+## Pt
+
+- float(x)
+- float(y)
 
 ## Border and Padding
 
