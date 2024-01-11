@@ -17,3 +17,8 @@ a member variable for holding a string which is an input. It is set using a cons
 There is a peak method that returns a bool. There is also a IsError method that returns a bool and a error()
 method that returns a error code.
 
+# Use Case 3
+
+A user makes a change, but wants to undo said change. Then they change their mind and want to return the change.
+A user wants to undo many changes. They make another change, and then undo it.
+
