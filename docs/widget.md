@@ -81,18 +81,31 @@ interface Dropzone {
 
 We can easily build and store out the trees of a UI using widgets.
 
-## Rectangle
-
-- width
-- height
-- top left position
-
-## Pt
-
-- float(x)
-- float(y)
-
 ## Border and Padding
 
 A border is simply a rectangle behind another rectangle
 
+# Very Basic Data
+
+## Rectangle
+
+- width (double)
+- height (double)
+- top left Point (double)
+
+## Circle
+
+- top left Point 
+- radius
+
+This one is weird. The circle is drawn from r/2, r/2 .
+
+## Point
+
+- x : double
+- y : double 
+
+## Line
+
+- start (Point)
+- end (Point)
