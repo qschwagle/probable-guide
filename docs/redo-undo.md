@@ -1,7 +1,9 @@
 # Redo and Undo implementation
 
-Each change on the document must be done through command Objects. 
-
+Every discrete event is represented by a command object. Discrete events
+are done by the user and directly applied to the document. The event is
+wrapped and reversible and placed on the modification stack. The modification
+stack then can be used to travel forward and back in the time of the document.
 
 ### Command Object
 
@@ -16,3 +18,10 @@ except the undo-ed operation.
 
 The modification stack contains the command objects to transition the document
 from a starting state to the current state.
+
+## When is a Command Object created?
+
+Objects are created when a discrete event has completed. So a drag AND drop is a 
+complete event. A color change is a complete event. 
+
+
