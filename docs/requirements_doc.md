@@ -73,4 +73,21 @@ portions of them would be ideal.
 For complex diagrams, sub diagrams might be useful. Having multiple diagrams connected as sub components could be nice
 
 
+# Decisions
 
+I am going to use c++ for this implementation. It will be using either opengl or vulkan for the renderer and skia for 2D graphics.
+I will either use sdl2 or glfw.
+
+### UI
+
+- glfw or sdl2
+- skia
+- opengl or vulkan
+
+## Document Storage
+
+- XML (tinyxml2)
+
+## App Storage
+
+- Sqlite
