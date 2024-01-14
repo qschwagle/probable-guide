@@ -12,3 +12,13 @@ set_property(TARGET probable_guide PROPERTY CXX_STANDARD 23)
 
 target_include_directories(probable_guide PRIVATE include)
 
+include(FetchContent)
+
+FetchContent_Declare(
+    glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git  
+    GIT_TAG        3.3.9
+)
+
+FetchContent_MakeAvailable(glfw)
+
