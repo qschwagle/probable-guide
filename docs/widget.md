@@ -65,15 +65,15 @@ interface Disable {
 ### Draggable 
 
 interface Draggable {
-    bool draggable()
-    void disableDrag()
+    Widget* draggable()
     List<targettype> targets
 }
 
 ### Dropzone
 
 interface Dropzone {
-    bool isDropzone()
+    Widget* DropzoneHit(Point pt)
+    bool Accept(Draggable* d);
     type dropzone()
 }
 
