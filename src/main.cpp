@@ -6,7 +6,8 @@ int main(int argc, char** argv)
 {
     auto program = probable_guide::ProbableGuide::Create();
 
-    if(program->Init(argc, argv)) {
+    if(!program->Init(argc, argv)) {
+        std::cout << "probable_guide terminated after init()" << std::endl;
         return -1;
     }
 

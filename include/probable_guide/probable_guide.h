@@ -1,9 +1,13 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 namespace probable_guide
 {
+
+class Window;
+
 class ProbableGuide : public std::enable_shared_from_this<ProbableGuide>
 {
     struct Private{};
@@ -29,6 +33,11 @@ public:
     int Run();
 
     virtual ~ProbableGuide();
+
+    std::shared_ptr<Window> CreateWindow();
+
+    void CloseWindow(std::shared_ptr<Window> window);
 private:
+    std::vector<std::shared_ptr<Window>> mWindows;
 };
 }
