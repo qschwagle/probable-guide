@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.28)
 
 project(probable_guide)
 
@@ -12,7 +12,7 @@ set_property(TARGET probable_guide PROPERTY CXX_STANDARD 23)
 
 target_include_directories(probable_guide PRIVATE include)
 
-target_link_libraries(probable_guide PRIVATE glfw)
+target_link_libraries(probable_guide PRIVATE glfw glm)
 
 include(FetchContent)
 
@@ -22,5 +22,14 @@ FetchContent_Declare(
     GIT_TAG        3.3.9
 )
 
-FetchContent_MakeAvailable(glfw)
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG     0.9.9.8
+)
 
+set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "glfw docs not needed")
+
+FetchContent_MakeAvailable(glfw glm)
+
+# vim:set sw=4 ts=4 et:
