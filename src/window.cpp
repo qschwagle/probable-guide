@@ -14,6 +14,20 @@ static void WindowSizeCallBack(GLFWwindow* window, int width, int height)
     w->OnWindowSizeChange(width, height);
 }
 
+static void WindowFramebufferChangeCallback(GLFWwindow* window, int width, int height)
+{
+    void* user_pointer = glfwGetWindowUserPointer(window);
+    Window* w = reinterpret_cast<Window*>(user_pointer);
+    w->OnFramebufferChange(width, height);
+}
+
+void Window::OnFramebufferChange(int width, int height)
+{
+    mFramebufferWidth = width;
+    mFramebufferHeight = height;
+}
+
+
 Window::Window(Window::Private)
 {
 }
@@ -34,11 +48,12 @@ void Window::Close()
 
 bool Window::Init()
 {
-    if(!(mGLFWWindow = glfwCreateWindow(mWidth, mHeight, "Probable Guide", NULL, NULL))) {
+    if(!(mGLFWWindow = glfwCreateWindow(mScreenWidth, mScreenHeight, "Probable Guide", NULL, NULL))) {
         return false;
     }
     glfwSetWindowUserPointer(mGLFWWindow, this);
     glfwSetWindowSizeCallback(mGLFWWindow, WindowSizeCallBack);
+    glfwSetFramebufferSizeCallback(mGLFWWindow, WindowFramebufferChangeCallback);
     return true;
 }
 

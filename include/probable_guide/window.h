@@ -22,8 +22,11 @@ public:
 private:
     static std::shared_ptr<Window> Create(std::shared_ptr<ProbableGuide> guide) {
         auto window = std::make_shared<Window>(Private());
-        window->mWidth = 1920;
-        window->mHeight = 1080;
+        window->mScreenWidth = 1920;
+        window->mScreenHeight = 1080;
+        window->mFramebufferWidth = 1920;
+        window->mFramebufferHeight = 1080;
+
         window->mGuide = guide;
         return window;
     }
@@ -49,9 +52,17 @@ public:
 
     void OnWindowSizeChange(int width, int height);
 
+    void OnFramebufferChange(int width, int height);
+
 private:
-    int mWidth{0};
-    int mHeight{0};
+    /// screen space width
+    int mScreenWidth{0};
+    /// screen space height
+    int mScreenHeight{0};
+    /// framebuffer width in pixels
+    int mFramebufferWidth{0};
+    int mFramebufferHeight{0};
+
     std::weak_ptr<ProbableGuide> mGuide;
     GLFWwindow* mGLFWWindow{nullptr};
 };
