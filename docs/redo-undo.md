@@ -24,4 +24,3 @@ from a starting state to the current state.
 Objects are created when a discrete event has completed. So a drag AND drop is a 
 complete event. A color change is a complete event. 
 
-

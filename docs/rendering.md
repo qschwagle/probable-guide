@@ -41,3 +41,5 @@ struct VulkanSurface (reference)
 Skia will need information to render. Future research needs to be done to figure out
 how skia needs to be split up between windows
 
+All items will be rendered through skia.
+
