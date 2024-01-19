@@ -5,7 +5,9 @@
 #include <iostream>
 
 #include <probable_guide/window.h>
+#include <probable_guide/vulkan_context.h>
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 using namespace probable_guide;
@@ -16,7 +18,17 @@ bool ProbableGuide::Init(int argc, char** argv)
         return false;
     }
 
-    CreateWindow()->Init();
+    if(!CreateWindow()->Init()) {
+        std::cout << "failed to create window" << std::endl;
+        return false;
+    }
+
+    mVulkanContext = VulkanContext::Create();
+
+    if(!mVulkanContext->Init()) {
+        std::cout << "vulkan failed to initialize" << std::endl;
+        return false;
+    }
 
     return true;
 }

@@ -6,13 +6,14 @@ add_executable(probable_guide
     src/main.cpp
     src/probable_guide.cpp
     src/window.cpp
+    src/vulkan_context.cpp
 )
 
 set_property(TARGET probable_guide PROPERTY CXX_STANDARD 23)
 
 target_include_directories(probable_guide PRIVATE include)
 
-target_link_libraries(probable_guide PRIVATE glfw glm)
+target_link_libraries(probable_guide PRIVATE glfw glm Vulkan::Vulkan)
 
 include(FetchContent)
 
@@ -31,5 +32,7 @@ FetchContent_Declare(
 set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "glfw docs not needed")
 
 FetchContent_MakeAvailable(glfw glm)
+
+find_package(Vulkan REQUIRED)
 
 # vim:set sw=4 ts=4 et:

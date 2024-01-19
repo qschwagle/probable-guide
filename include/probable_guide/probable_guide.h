@@ -7,6 +7,7 @@ namespace probable_guide
 {
 
 class Window;
+class VulkanContext;
 
 class ProbableGuide : public std::enable_shared_from_this<ProbableGuide>
 {
@@ -39,5 +40,6 @@ public:
     void CloseWindow(std::shared_ptr<Window> window);
 private:
     std::vector<std::shared_ptr<Window>> mWindows;
+    std::shared_ptr<VulkanContext> mVulkanContext;
 };
 }

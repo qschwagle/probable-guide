@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 using namespace probable_guide;
@@ -55,6 +56,13 @@ void Window::Close()
 
 bool Window::Init()
 {
+
+    // preparing for vulkan
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+    // will be removed in the future
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
     if(!(mGLFWWindow = glfwCreateWindow(mScreenWidth, mScreenHeight, "Probable Guide", NULL, NULL))) {
         return false;
     }
