@@ -54,6 +54,8 @@ public:
 
     void OnFramebufferChange(int width, int height);
 
+    void OnWindowPositionChange(int x, int y);
+
 private:
     /// screen space width
     int mScreenWidth{0};

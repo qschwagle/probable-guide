@@ -21,6 +21,13 @@ static void WindowFramebufferChangeCallback(GLFWwindow* window, int width, int h
     w->OnFramebufferChange(width, height);
 }
 
+static void WindowPositionChangeCallback(GLFWwindow* window, int x, int y)
+{
+    void* user_pointer = glfwGetWindowUserPointer(window);
+    Window* w = reinterpret_cast<Window*>(user_pointer);
+    w->OnWindowPositionChange(x, y);
+}
+
 void Window::OnFramebufferChange(int width, int height)
 {
     mFramebufferWidth = width;
@@ -72,6 +79,12 @@ void Window::MakeContextCurrent()
 }
 
 void Window::OnWindowSizeChange(int width, int height)
+{
+
+}
+
+
+void Window::OnWindowPositionChange(int x, int y)
 {
 
 }
