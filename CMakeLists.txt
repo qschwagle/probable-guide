@@ -29,9 +29,18 @@ FetchContent_Declare(
     GIT_TAG     0.9.9.8
 )
 
+FetchContent_Declare(
+    tinyxml2
+    GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
+    GIT_TAG v10.0.0
+)
+
 set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "glfw docs not needed")
 
-FetchContent_MakeAvailable(glfw glm)
+FetchContent_MakeAvailable(glfw glm tinyxml2)
+
+set_property(TARGET tinyxml2 PROPERTY CXX_STANDARD 23)
+
 
 find_package(Vulkan REQUIRED)
 
