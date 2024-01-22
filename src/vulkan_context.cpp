@@ -30,7 +30,7 @@ public:
     bool Init();
 
 private:
-    VkInstance mInstance;
+    VkInstance mInstance{};
 };
 
 }
@@ -87,6 +87,17 @@ bool VulkanContextPrivate::Init()
         std::cout << "failed to create vulkan instance" << std::endl;
         return false;
     }
+
+    const std::vector<const char*> validationLayers = {
+        "VK_LAYER_KHRONOS_validation"
+    };
+
+#ifdef NDEBUG
+    const bool enableValidationLayers = false;
+#else
+    const bool enableValidationLayers = true;
+#endif
+
     return true;
 }
 
