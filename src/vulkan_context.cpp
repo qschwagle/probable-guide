@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <optional>
 
 #include <vulkan/vulkan.h>
 
@@ -69,8 +70,9 @@ public:
     bool Init();
 
 private:
-    VkInstance mInstance{};
+    VkInstance               mInstance{};
     VkDebugUtilsMessengerEXT mDebugMessenger{};
+    VkPhysicalDevice         mPhysicalDevice = VK_NULL_HANDLE;
 };
 
 }
@@ -81,6 +83,45 @@ bool VulkanContext::Init()
 
     return mPrivate->Init();
 }
+
+struct QueueFamilyIndices {
+    std::optional<uint32_t> graphicsFamily;
+
+    bool isComplete() {
+        return graphicsFamily.has_value();
+    }
+};
+
+static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) {
+    QueueFamilyIndices indices;
+
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+    int i = 0;
+    for (const auto& queueFamily : queueFamilies) {
+        if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+            indices.graphicsFamily = i;
+        }
+
+        if(indices.isComplete()) {
+            break;
+        }
+        i++;
+    }
+    return indices;
+}
+
+
+static bool isDeviceSuitable(VkPhysicalDevice device) {
+    QueueFamilyIndices indices = FindQueueFamilies(device);
+
+    return indices.isComplete();
+}
+
 
 
 bool VulkanContextPrivate::Init()
@@ -151,6 +192,29 @@ bool VulkanContextPrivate::Init()
 
     if (CreateDebugUtilsMessengerEXT(mInstance, &debugCreateInfo, nullptr, &mDebugMessenger) != VK_SUCCESS) {
         std::cout << "failed to set up debug messenger!" << std::endl;
+        return false;
+    }
+
+    uint32_t deviceCount = 0;
+
+    vkEnumeratePhysicalDevices(mInstance, &deviceCount, nullptr);
+    if (deviceCount == 0) {
+        std::cout << "failed to find GPUs with Vulkan support!" << std::endl;
+        return false;
+    }
+
+    std::vector<VkPhysicalDevice> devices(deviceCount);
+    vkEnumeratePhysicalDevices(mInstance, &deviceCount, devices.data());
+
+    for(const auto& device : devices) {
+        if (isDeviceSuitable(device)) {
+            mPhysicalDevice = device;
+            break;
+        }
+    }
+
+    if (mPhysicalDevice == VK_NULL_HANDLE) {
+        std::cout << "failed to find suitable GPU" << std::endl;
         return false;
     }
 
