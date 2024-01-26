@@ -73,6 +73,8 @@ private:
     VkInstance               mInstance{};
     VkDebugUtilsMessengerEXT mDebugMessenger{};
     VkPhysicalDevice         mPhysicalDevice = VK_NULL_HANDLE;
+    VkDevice                 mDevice;
+    VkQueue                  mGraphicsQueue;
 };
 
 }
@@ -218,12 +220,40 @@ bool VulkanContextPrivate::Init()
         return false;
     }
 
+    QueueFamilyIndices indices = FindQueueFamilies(mPhysicalDevice);
+
+    VkDeviceQueueCreateInfo deviceQueueCreateInfo{};
+    deviceQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    deviceQueueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+    deviceQueueCreateInfo.queueCount = 1;
+
+    float deviceQueuePriority = 1.0f;
+    deviceQueueCreateInfo.pQueuePriorities = &deviceQueuePriority;
+
+    VkPhysicalDeviceFeatures deviceFeatures{};
+
+    VkDeviceCreateInfo deviceCreateInfo{};
+    deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    deviceCreateInfo.pQueueCreateInfos = &deviceQueueCreateInfo;
+    deviceCreateInfo.queueCreateInfoCount = 1;
+    deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
+
+    deviceCreateInfo.enabledExtensionCount = 0;
+    deviceCreateInfo.enabledLayerCount = 0;
+
+    if(vkCreateDevice(mPhysicalDevice, &deviceCreateInfo, nullptr, &mDevice) != VK_SUCCESS) {
+        std::cout << "failed to create logical device" << std::endl;
+        return false;
+    }
+
+    vkGetDeviceQueue(mDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
+
     return true;
 }
 
 VulkanContextPrivate::~VulkanContextPrivate()
 {
-
+    vkDestroyDevice(mDevice, nullptr);
     DestroyDebugUtilsMessengerEXT(mInstance, mDebugMessenger, nullptr);
     vkDestroyInstance(mInstance, nullptr);
 }
