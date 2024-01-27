@@ -56,6 +56,8 @@ public:
 
     void OnWindowPositionChange(int x, int y);
 
+    GLFWwindow* GetHandle() { return mGLFWWindow; }
+
 private:
     /// screen space width
     int mScreenWidth{0};

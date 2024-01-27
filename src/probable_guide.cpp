@@ -18,14 +18,16 @@ bool ProbableGuide::Init(int argc, char** argv)
         return false;
     }
 
-    if(!CreateWindow()->Init()) {
+    auto window = CreateWindow();
+
+    if(!window->Init()) {
         std::cout << "failed to create window" << std::endl;
         return false;
     }
 
     mVulkanContext = VulkanContext::Create();
 
-    if(!mVulkanContext->Init()) {
+    if(!mVulkanContext->Init(window->GetHandle())) {
         std::cout << "vulkan failed to initialize" << std::endl;
         return false;
     }

@@ -67,7 +67,7 @@ public:
     VulkanContextPrivate& operator=(const VulkanContextPrivate&)=delete;
     VulkanContextPrivate& operator=(const VulkanContextPrivate&&)=delete;
 
-    bool Init();
+    bool Init(GLFWwindow* window);
 
 private:
     VkInstance               mInstance{};
@@ -75,15 +75,16 @@ private:
     VkPhysicalDevice         mPhysicalDevice = VK_NULL_HANDLE;
     VkDevice                 mDevice;
     VkQueue                  mGraphicsQueue;
+    VkSurfaceKHR             mSurface;
 };
 
 }
 
-bool VulkanContext::Init()
+bool VulkanContext::Init(GLFWwindow* window)
 {
     mPrivate = std::make_shared<VulkanContextPrivate>();
 
-    return mPrivate->Init();
+    return mPrivate->Init(window);
 }
 
 struct QueueFamilyIndices {
@@ -126,7 +127,7 @@ static bool isDeviceSuitable(VkPhysicalDevice device) {
 
 
 
-bool VulkanContextPrivate::Init()
+bool VulkanContextPrivate::Init(GLFWwindow* window)
 {
     VkApplicationInfo appInfo{};
     appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -248,11 +249,17 @@ bool VulkanContextPrivate::Init()
 
     vkGetDeviceQueue(mDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
 
+    if (glfwCreateWindowSurface(mInstance, window, nullptr, &mSurface) != VK_SUCCESS) {
+        std::cout << "could not create surface" << std::endl;
+        return false;
+    }
+
     return true;
 }
 
 VulkanContextPrivate::~VulkanContextPrivate()
 {
+    vkDestroySurfaceKHR(mInstance, mSurface, nullptr);
     vkDestroyDevice(mDevice, nullptr);
     DestroyDebugUtilsMessengerEXT(mInstance, mDebugMessenger, nullptr);
     vkDestroyInstance(mInstance, nullptr);

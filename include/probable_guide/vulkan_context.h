@@ -2,6 +2,8 @@
 
 #include <memory>
 
+struct GLFWwindow;
+
 namespace probable_guide
 {
 
@@ -15,7 +17,7 @@ public:
     VulkanContext(Private) {}
     virtual ~VulkanContext() {}
 
-    bool Init();
+    bool Init(GLFWwindow* window);
 
     VulkanContext(const VulkanContext&)=delete;
     VulkanContext(const VulkanContext&&)=delete;
