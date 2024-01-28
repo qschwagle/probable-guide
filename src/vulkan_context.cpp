@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <optional>
+#include <set>
 
 #include <vulkan/vulkan.h>
 
@@ -76,6 +77,7 @@ private:
     VkDevice                 mDevice;
     VkQueue                  mGraphicsQueue;
     VkSurfaceKHR             mSurface;
+    VkQueue                  mPresentQueue;
 };
 
 }
@@ -89,13 +91,14 @@ bool VulkanContext::Init(GLFWwindow* window)
 
 struct QueueFamilyIndices {
     std::optional<uint32_t> graphicsFamily;
+    std::optional<uint32_t> presentFamily;
 
     bool isComplete() {
-        return graphicsFamily.has_value();
+        return graphicsFamily.has_value() && presentFamily.has_value();
     }
 };
 
-static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) {
+static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface) {
     QueueFamilyIndices indices;
 
     uint32_t queueFamilyCount = 0;
@@ -106,6 +109,12 @@ static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) {
 
     int i = 0;
     for (const auto& queueFamily : queueFamilies) {
+        VkBool32 presentSupport = false;
+        vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+        if (presentSupport) {
+            indices.presentFamily = i;
+        }
+
         if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
             indices.graphicsFamily = i;
         }
@@ -119,8 +128,8 @@ static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device) {
 }
 
 
-static bool isDeviceSuitable(VkPhysicalDevice device) {
-    QueueFamilyIndices indices = FindQueueFamilies(device);
+static bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) {
+    QueueFamilyIndices indices = FindQueueFamilies(device, surface);
 
     return indices.isComplete();
 }
@@ -210,7 +219,7 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
     vkEnumeratePhysicalDevices(mInstance, &deviceCount, devices.data());
 
     for(const auto& device : devices) {
-        if (isDeviceSuitable(device)) {
+        if (isDeviceSuitable(device, mSurface)) {
             mPhysicalDevice = device;
             break;
         }
@@ -221,7 +230,7 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
         return false;
     }
 
-    QueueFamilyIndices indices = FindQueueFamilies(mPhysicalDevice);
+    QueueFamilyIndices indices = FindQueueFamilies(mPhysicalDevice, mSurface);
 
     VkDeviceQueueCreateInfo deviceQueueCreateInfo{};
     deviceQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
