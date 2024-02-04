@@ -217,6 +217,12 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
 
     std::vector<VkPhysicalDevice> devices(deviceCount);
     vkEnumeratePhysicalDevices(mInstance, &deviceCount, devices.data());
+    
+    if (glfwCreateWindowSurface(mInstance, window, nullptr, &mSurface) != VK_SUCCESS) {
+        std::cout << "could not create surface" << std::endl;
+        return false;
+    }
+
 
     for(const auto& device : devices) {
         if (isDeviceSuitable(device, mSurface)) {
@@ -271,10 +277,6 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
 
     vkGetDeviceQueue(mDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
 
-    if (glfwCreateWindowSurface(mInstance, window, nullptr, &mSurface) != VK_SUCCESS) {
-        std::cout << "could not create surface" << std::endl;
-        return false;
-    }
 
 
 
