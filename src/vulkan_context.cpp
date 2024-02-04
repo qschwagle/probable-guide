@@ -152,7 +152,7 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
     std::vector<const char *> layerNames = { "VK_LAYER_KHRONOS_validation" };
 
     createInfo.ppEnabledLayerNames = layerNames.data();
-    createInfo.enabledLayerCount = layerNames.size();
+    createInfo.enabledLayerCount = static_cast<uint32_t>(layerNames.size());
 
     uint32_t glfwExtensionCount = 0;
     const char** glfwExtensions;
@@ -266,7 +266,7 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
     deviceCreateInfo.pQueueCreateInfos = queueCreateInfos.data();
     deviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
     deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
-
+    
     deviceCreateInfo.enabledExtensionCount = 0;
     deviceCreateInfo.enabledLayerCount = 0;
 
@@ -276,9 +276,6 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
     }
 
     vkGetDeviceQueue(mDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
-
-
-
 
     vkGetDeviceQueue(mDevice, indices.presentFamily.value(), 0, &mPresentQueue);
 
