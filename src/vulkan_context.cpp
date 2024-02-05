@@ -134,6 +134,19 @@ static bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) {
     return indices.isComplete();
 }
 
+struct SwapChainSupportDetails {
+    VkSurfaceCapabilitiesKHR capabilities;
+    std::vector<VkSurfaceFormatKHR> formats;
+    std::vector<VkPresentModeKHR> presentModes;
+};
+
+SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device)
+{
+    SwapChainSupportDetails details;
+    return details;
+}
+
+
 
 
 bool VulkanContextPrivate::Init(GLFWwindow* window)
@@ -267,7 +280,11 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
     deviceCreateInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
     deviceCreateInfo.pEnabledFeatures = &deviceFeatures;
     
-    deviceCreateInfo.enabledExtensionCount = 0;
+    std::vector<const char*> deviceExtensions;
+    deviceExtensions.emplace_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+    
+    deviceCreateInfo.ppEnabledExtensionNames = deviceExtensions.data();
+    deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
     deviceCreateInfo.enabledLayerCount = 0;
 
     if(vkCreateDevice(mPhysicalDevice, &deviceCreateInfo, nullptr, &mDevice) != VK_SUCCESS) {
@@ -278,6 +295,11 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
     vkGetDeviceQueue(mDevice, indices.graphicsFamily.value(), 0, &mGraphicsQueue);
 
     vkGetDeviceQueue(mDevice, indices.presentFamily.value(), 0, &mPresentQueue);
+    
+    
+    
+    
+    
 
     return true;
 }
