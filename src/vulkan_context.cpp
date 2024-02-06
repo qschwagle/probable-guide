@@ -127,21 +127,6 @@ static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKH
     return indices;
 }
 
-
-static bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) {
-    QueueFamilyIndices indices = FindQueueFamilies(device, surface);
-    
-    
-    bool swapChainAdequate = false;
-    if (extensionsSupported) {
-        SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
-        swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
-    }
-
-
-    return indices.isComplete() && extensionsSupported && swapChainAdequate;
-}
-
 struct SwapChainSupportDetails {
     VkSurfaceCapabilitiesKHR capabilities;
     std::vector<VkSurfaceFormatKHR> formats;
@@ -172,8 +157,19 @@ SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurface
     return details;
 }
 
+static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
 
+}
 
+static bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) {
+    QueueFamilyIndices indices = FindQueueFamilies(device, surface);
+    
+    bool swapChainAdequate = false;
+    SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device, surface);
+    swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+
+    return indices.isComplete() && swapChainAdequate;
+}
 
 bool VulkanContextPrivate::Init(GLFWwindow* window)
 {
