@@ -4,6 +4,7 @@
 #include <vector>
 #include <optional>
 #include <set>
+#include <algorithm>
 
 #include <vulkan/vulkan.h>
 
@@ -158,9 +159,40 @@ SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurface
 }
 
 static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
+    for (const auto& availableFormat : availableFormats) {
+        if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+            return availableFormat;
+        }
+    }
 
+    return availableFormats[0];
 }
 
+static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
+    for (const auto& availablePresentMode : availablePresentModes) {
+        if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
+            return availablePresentMode;
+        }
+    }
+
+    return VK_PRESENT_MODE_FIFO_KHR;
+}
+
+static VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, int windowWidth, int windowHeight) {
+    if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+        return capabilities.currentExtent;
+    } else {
+        VkExtent2D actualExtent = {
+            static_cast<uint32_t>(windowWidth),
+            static_cast<uint32_t>(windowHeight)
+        };
+
+        actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+        actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+        return actualExtent;
+    }
+}
 static bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) {
     QueueFamilyIndices indices = FindQueueFamilies(device, surface);
     
@@ -318,10 +350,15 @@ bool VulkanContextPrivate::Init(GLFWwindow* window)
 
     vkGetDeviceQueue(mDevice, indices.presentFamily.value(), 0, &mPresentQueue);
     
-    
-    
-    
+   
+    SwapChainSupportDetails swapChainSupport = querySwapChainSupport(mPhysicalDevice, mSurface);
 
+    VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+    VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities, width, height);
+    
     return true;
 }
 
