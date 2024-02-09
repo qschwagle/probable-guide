@@ -19,9 +19,8 @@ I am going to choose Vulkan for the time being.
 ## Vulkan integration
 
 Vulkan rendering is complex. There are many moving parts that need to be handled by
-the developer. For my purposes, I am going to have either one context per window
-or one context that is erased and replaced for each window. I will need to read up
-on which is better. 
+the developer. There is one vulkan instance and potentially the physical device and device handled by the VulkanContext. Each window 
+recieve a hanlder to the VulkanContext and maintain their own separate vulkan objects such as surfaces, queues, etc.
 
 I am going to do a center dependency that then is given out to windows. The windows
 then can use the context when they need to render.
@@ -33,8 +32,7 @@ Main Render Vulkan Context -> Window
                            -> Window
 struct VulkanContext (main)
 
-struct VulkanSurface (reference)
-
+Each window will hold a strong reference to the VulkanContext. The program will also hold a strong reference to the vulkanContext. The vulkanContext will not hold a strong reference to the windows.
 
 ## Skia
 
